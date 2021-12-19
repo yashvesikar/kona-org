@@ -1,0 +1,17 @@
+.content {
+  width: 100%;
+  display: flex;
+}
+
+.mainContent {
+  width: 100%;
+  background-color: #f3f6f1;
+  border-radius: 32px 7px 0;
+  padding: 20px;
+}
+
+@media screen and (max-width: 719px) {
+  .mainContent {
+    border-radius: 32px 32px 0;
+  }
+}

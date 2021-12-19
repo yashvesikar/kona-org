@@ -1,0 +1,172 @@
+// Variables
+$bezier-focus: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+.name {
+  font-size: 36px;
+  font-weight: bold;
+  width: 50%;
+}
+
+.headerSection {
+  display: flex;
+  align-items: center;
+  margin: 30px 0 0 40px;
+}
+
+.filterContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.filterIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > p {
+    font-size: 18px;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 15px;
+  width: 100px;
+  height: 30px;
+  border-radius: 15px;
+  color: hsl(0, 0%, 100%);
+  background: hsla(113, 30%, 60%, 1);
+
+  &.active {
+    color: hsl(0, 0%, 100%);
+    background: hsla(113, 60%, 40%, 1);
+  }
+
+  &:focus,
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.statsSection {
+  margin: 20px 0 0 0;
+}
+
+.statsTitle {
+  font-size: 22px;
+  text-align: center;
+}
+
+.consolidatedTeamsSection {
+  display: flex;
+  min-height: 40vh;
+  background-color: #fff;
+  border-radius: 18px;
+  margin: 0 0 0 40px;
+  padding: 20px;
+}
+
+.consolidatedTeams {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+.teamContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 20px;
+  width: 230px;
+  height: 70px;
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s $bezier-focus, background-color 0.5s $bezier-focus;
+
+  &.primary {
+    font-weight: bold;
+    // background: hsla(12, 46%, 69%, 0.5);
+    // border: 3px solid hsla(12, 46%, 69%, 0.5);
+  }
+
+  &.selected {
+    // background: hsla(213, 6%, 71%, 0.23);
+    background: hsla(113, 30%, 60%, 0.5);
+  }
+  // hover animation
+  &:focus,
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.02) translate3d(0, 0, 0) perspective(1px);
+  }
+
+  > .teamName {
+    font-size: 18px;
+  }
+
+  > .manager {
+    font-size: 14px;
+    margin-top: 5px;
+  }
+}
+
+.teamInfoPane {
+  width: 100%;
+  padding: 10px;
+
+  .teamName {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .reportsText {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .reports {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.4;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .report {
+  }
+  &.green {
+    background-color: hsla(113, 30%, 60%, 0.5);
+  }
+}
+
+@media screen and (max-width: 719px) {
+  .headerSection {
+    margin: 10px 10px 0 20px;
+  }
+
+  .name {
+    margin: 0;
+    font-size: 24px;
+    width: 100%;
+  }
+
+  .filterContainer {
+    width: 20%;
+  }
+}

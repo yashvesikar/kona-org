@@ -1,0 +1,42 @@
+.container {
+  width: 230px;
+  height: 60px;
+  padding: 0 28px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  background-color: rgb(176, 180, 185);
+
+  &.active {
+    background-color: hsl(0, 0%, 0%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  &:focus,
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 16px 0 0;
+
+  > svg {
+    color: hsl(0, 0%, 0%);
+  }
+
+  &.active {
+    > svg {
+      fill: hsl(0, 0%, 100%);
+    }
+  }
+}
+
+.primaryText {
+  font-size: 22px;
+  font-weight: bold;
+}

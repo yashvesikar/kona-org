@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model teams {
+  id                        Int     @id @default(autoincrement())
+  team_id                   String?
+  name                      String
+  manager                   String
+  manager_id                String
+  directs                   String?
+  channel_id                String?
+  consolidated_primary_team String?
+  consolidated_teams        String?
+}
+
+model users {
+  id         Int      @id @default(autoincrement())
+  user_id    String?
+  name       String
+  manager    String
+  is_manager Boolean?
+}
