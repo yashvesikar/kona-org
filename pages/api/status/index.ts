@@ -46,7 +46,7 @@ export default async function handler(
 
   const response = users.map((user) => {
     return {
-      user,
+      ...user,
       ...statusOptions[Math.floor(Math.random() * statusOptions.length)],
     };
   });

@@ -99,14 +99,12 @@ $bezier-focus: cubic-bezier(0.25, 0.1, 0.25, 1);
 
   &.primary {
     font-weight: bold;
-    // background: hsla(12, 46%, 69%, 0.5);
-    // border: 3px solid hsla(12, 46%, 69%, 0.5);
   }
 
   &.selected {
-    // background: hsla(213, 6%, 71%, 0.23);
     background: hsla(113, 30%, 60%, 0.5);
   }
+
   // hover animation
   &:focus,
   &:hover {
@@ -128,30 +126,67 @@ $bezier-focus: cubic-bezier(0.25, 0.1, 0.25, 1);
   width: 100%;
   padding: 10px;
 
-  .teamName {
-    font-size: 22px;
-    font-weight: bold;
+  .teamInfoTopRegion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
     line-height: 1.5;
+
+    .teamName {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .teamParticipation {
+      font-size: 18px;
+    }
   }
+}
+
+.reportsSection {
+  margin-top: 20px;
 
   .reportsText {
     font-size: 18px;
-    margin-top: 10px;
   }
 
   .reports {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.4;
-    justify-content: center;
-    margin-top: 20px;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
   }
 
   .report {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s $bezier-focus,
+      background-color 0.5s $bezier-focus;
+    padding: 15px;
+
+    // hover animation
+    &:focus,
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.02) translate3d(0, 0, 0) perspective(1px);
+    }
   }
-  &.green {
-    background-color: hsla(113, 30%, 60%, 0.5);
+
+  .green {
+    background: hsla(113, 30%, 60%, 0.5);
+  }
+
+  .yellow {
+    background: hsla(41, 59%, 52%, 0.5);
+  }
+
+  .red {
+    background: hsla(12, 55%, 69%, 0.5);
   }
 }
 

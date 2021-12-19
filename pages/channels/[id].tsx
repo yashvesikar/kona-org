@@ -5,7 +5,7 @@ import Filter from "~/public/assets/images/filter.svg";
 import useBreakpoint from "~/hooks/useBreakpoint";
 import { Breakpoint } from "~/constants/global";
 import MultiColorProgressBar from "~/components/multi-color-progress-bar/MultiColorProgressBar";
-import { ITeam } from "~/types/users";
+import { ITeam, IUser } from "~/types/users";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
@@ -49,14 +49,18 @@ const Channels = (
     if (selectedFilter === "All") {
       setFilteredTeams(consolidatedTeams);
     } else if (selectedFilter === "My Teams") {
-      setFilteredTeams(
-        consolidatedTeams.filter(
-          (team: ITeam) =>
-            team.manager_id === user_id || team.directs.includes(user_id)
-        )
+      const filtered = consolidatedTeams.filter(
+        (team: ITeam) =>
+          team.manager_id === user_id || team.directs.includes(user_id)
       );
+
+      setFilteredTeams(filtered);
+
+      if (!filtered.includes(selectedTeam)) {
+        setSelectedTeam(filtered[0]);
+      }
     }
-  }, [consolidatedTeams, selectedFilter]);
+  }, [consolidatedTeams, selectedFilter, setSelectedTeam]);
 
   const breakpoint = useBreakpoint();
 
@@ -154,9 +158,17 @@ const ConsolidatedTeamsContent = ({
 };
 
 const TeamInfoPane = ({ team }: { team: ITeam }): JSX.Element => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<
+    (IUser & {
+      status: "green" | "yellow" | "red";
+      customStatus?: string;
+      text?: string;
+    })[]
+  >([]);
 
   useEffect(() => {
+    // Ideally this would be using react-query or some cache management system to improve performance
+    // Not doing that now for simplicity
     const fetchUsers = async () => {
       const data = await fetch(
         `http://localhost:3000/api/status?userIds=${JSON.parse(
@@ -173,22 +185,34 @@ const TeamInfoPane = ({ team }: { team: ITeam }): JSX.Element => {
 
   return (
     <div className={styles.teamInfoPane}>
-      <div className={styles.teamName}>{team.name}</div>
+      <div className={styles.teamInfoTopRegion}>
+        <div className={styles.teamName}>{team.name}</div>
+        <div className={styles.teamParticipation}>100% Reporting</div>
+      </div>
+
       <div className={styles.manager}>Manager - {team.manager}</div>
 
-      <div className={styles.reports}>
+      <div className={styles.reportsSection}>
         <span className={styles.reportsText}>Reports</span>
-        {users.map((user) => (
-          <div
-            key={user.user.user_id}
-            className={clsx(
-              styles.report,
-              user.status === "green" && styles.green
-            )}
-          >
-            {user?.user.name} - {user?.status}
-          </div>
-        ))}
+        <div className={styles.reports}>
+          {users.map((user) => (
+            <div
+              key={user.user_id}
+              className={clsx(
+                styles.report,
+                user.status === "green"
+                  ? styles.green
+                  : user.status === "yellow"
+                  ? styles.yellow
+                  : user.status === "red"
+                  ? styles.red
+                  : null
+              )}
+            >
+              <span> {user?.name} </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
