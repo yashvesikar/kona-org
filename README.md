@@ -1,7 +1,7 @@
 ## Getting Started
 
 [Figma Link](https://www.figma.com/file/ACOu2yP0Hs7PnI5T4ev3U6/Kona-take-home?node-id=5%3A3)
-
+[Loom Link](https://www.loom.com/share/cbcae85123e1445187aa0bd80710babc)
 ### Pre-requisites
 
 Please have the following software installed to run this project:
