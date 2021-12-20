@@ -35,10 +35,17 @@ export default async function handler(
       },
     });
 
+    const processedConsolidatedTeams = [
+      // @ts-ignore
+      ...new Map(
+        [primaryTeam, ...consolidatedTeams].map((team) => [team?.["id"], team])
+      ).values(),
+    ];
+
     const response = {
       channelId: channelId as string,
       primaryTeam: primaryTeam,
-      consolidatedTeams,
+      consolidatedTeams: processedConsolidatedTeams,
     };
 
     res.status(200).json(response);

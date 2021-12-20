@@ -117,7 +117,7 @@ $bezier-focus: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   > .manager {
-    font-size: 14px;
+    font-size: 18px;
     margin-top: 5px;
   }
 }
@@ -142,19 +142,25 @@ $bezier-focus: cubic-bezier(0.25, 0.1, 0.25, 1);
       font-size: 18px;
     }
   }
+
+  .manager {
+    font-size: 20px;
+    margin-top: 5px;
+  }
 }
 
 .reportsSection {
   margin-top: 20px;
 
   .reportsText {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .reports {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    margin: 20px 0;
   }
 
   .report {

@@ -1,14 +1,7 @@
-import type { InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
-import { Header } from "~/components/header/Header";
-import { SideNav } from "~/components/side-nav/SideNav";
 import styles from "../styles/Home.module.css";
 
-const Home = (
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-): JSX.Element => {
-  const { users } = props;
-
+const Home = (): JSX.Element => {
   return (
     <div className={styles.container}>
       <Head>
@@ -19,20 +12,6 @@ const Home = (
       Home Page
     </div>
   );
-};
-
-export const getServerSideProps = async () => {
-  const channelId = "CQ6151GPQ";
-  const data = await fetch(
-    `http://localhost:3000/api/organization/${channelId}`
-  );
-  const response = await data.json();
-
-  return {
-    props: {
-      ...response,
-    },
-  };
 };
 
 export default Home;

@@ -3,7 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Filter from "~/public/assets/images/filter.svg";
 import useBreakpoint from "~/hooks/useBreakpoint";
-import { Breakpoint } from "~/constants/global";
+import { Breakpoint, UserId } from "~/constants/global";
 import MultiColorProgressBar from "~/components/multi-color-progress-bar/MultiColorProgressBar";
 import { ITeam, IUser } from "~/types/users";
 import clsx from "clsx";
@@ -13,13 +13,13 @@ const Channels = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ): JSX.Element => {
   let { primaryTeam, consolidatedTeams } = props;
-  // Hardcoded because Andrew is "logged in"
-  const user_id = "UQ3QMNZ4M";
+
   const [selectedTeam, setSelectedTeam] = useState<ITeam>(primaryTeam);
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
   const [filteredTeams, setFilteredTeams] = useState<ITeam[]>([]);
 
   const filters = ["All", "My Teams"];
+
   // Purposefully kept the annotations for accessibilty purposes
   // Explore having patterns on every progress bar for accessibility || make it better for screen readers
   const progress = [
@@ -46,21 +46,25 @@ const Channels = (
   ];
 
   useEffect(() => {
+    setSelectedTeam(primaryTeam);
+  }, [primaryTeam]);
+
+  useEffect(() => {
     if (selectedFilter === "All") {
       setFilteredTeams(consolidatedTeams);
     } else if (selectedFilter === "My Teams") {
       const filtered = consolidatedTeams.filter(
         (team: ITeam) =>
-          team.manager_id === user_id || team.directs.includes(user_id)
+          team?.manager_id === UserId || team?.directs.includes(UserId)
       );
 
       setFilteredTeams(filtered);
 
       if (!filtered.includes(selectedTeam)) {
-        setSelectedTeam(filtered[0]);
+        setSelectedTeam(filtered?.[0]);
       }
     }
-  }, [consolidatedTeams, selectedFilter, setSelectedTeam]);
+  }, [consolidatedTeams, selectedFilter, setSelectedTeam, selectedTeam]);
 
   const breakpoint = useBreakpoint();
 
@@ -105,16 +109,16 @@ const Channels = (
       </div>
 
       <div className={styles.statsSection}>
-        <div className={styles.statsTitle}>Participation</div>
+        <div className={styles.statsTitle}>Overall Participation</div>
 
         {/* @ts-ignore */}
         <MultiColorProgressBar readings={progress} />
       </div>
 
       <div className={styles.consolidatedTeamsSection}>
-        <ConsolidatedTeamsContent
+        <ConsolidatedTeams
           primaryTeam={primaryTeam}
-          consolidatedTeams={filteredTeams}
+          filteredConsolidatedTeams={filteredTeams}
           selectedTeam={selectedTeam}
           setSelectedTeam={setSelectedTeam}
         />
@@ -124,18 +128,18 @@ const Channels = (
   );
 };
 
-const ConsolidatedTeamsContent = ({
+const ConsolidatedTeams = ({
   primaryTeam,
-  consolidatedTeams,
+  filteredConsolidatedTeams,
   selectedTeam,
   setSelectedTeam,
 }: {
   primaryTeam: ITeam;
-  consolidatedTeams: ITeam[];
+  filteredConsolidatedTeams: ITeam[];
   selectedTeam: ITeam;
   setSelectedTeam: (team: ITeam) => void;
 }): JSX.Element => {
-  const content = consolidatedTeams.map((team: ITeam) => {
+  const content = filteredConsolidatedTeams.map((team: ITeam) => {
     const isPrimary = team.team_id === primaryTeam.team_id;
     const isSelected = team.team_id === selectedTeam.team_id;
     return (
@@ -157,14 +161,15 @@ const ConsolidatedTeamsContent = ({
   return <div className={styles.consolidatedTeams}>{content}</div>;
 };
 
+interface IUserExtended extends IUser {
+  status: "green" | "yellow" | "red";
+  customStatus?: string;
+  text?: string;
+}
+
 const TeamInfoPane = ({ team }: { team: ITeam }): JSX.Element => {
-  const [users, setUsers] = useState<
-    (IUser & {
-      status: "green" | "yellow" | "red";
-      customStatus?: string;
-      text?: string;
-    })[]
-  >([]);
+  const [users, setUsers] = useState<IUserExtended[]>([]);
+  const [progress, setProgress] = useState<object[]>([]);
 
   useEffect(() => {
     // Ideally this would be using react-query or some cache management system to improve performance
@@ -179,6 +184,33 @@ const TeamInfoPane = ({ team }: { team: ITeam }): JSX.Element => {
       const json = await data.json();
       console.log(json);
       setUsers(json);
+      const progressBarData = { green: 0, yellow: 0, red: 0, unknown: 0 };
+
+      json.forEach((user: IUserExtended) => {
+        progressBarData[user.status]++;
+      });
+      setProgress([
+        {
+          name: "Green",
+          value: Math.floor((progressBarData.green / json.length) * 100),
+          color: "#83B87C",
+        },
+        {
+          name: "Yellow",
+          value: Math.floor((progressBarData.yellow / json.length) * 100),
+          color: "#CD9F3B",
+        },
+        {
+          name: "Red",
+          value: Math.floor((progressBarData.red / json.length) * 100),
+          color: "#DC9685",
+        },
+        {
+          name: "Unknown",
+          value: Math.floor((progressBarData.unknown / json.length) * 100),
+          color: "#B0B4B9",
+        },
+      ]);
     };
     fetchUsers();
   }, [team]);
@@ -191,6 +223,9 @@ const TeamInfoPane = ({ team }: { team: ITeam }): JSX.Element => {
       </div>
 
       <div className={styles.manager}>Manager - {team.manager}</div>
+
+      {/* @ts-ignore */}
+      <MultiColorProgressBar readings={progress} />
 
       <div className={styles.reportsSection}>
         <span className={styles.reportsText}>Reports</span>

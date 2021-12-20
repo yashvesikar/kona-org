@@ -1,12 +1,13 @@
 import styles from "./StandardLayout.module.scss";
 
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { Header } from "~/components/header/Header";
 import { SideNav } from "~/components/side-nav/SideNav";
 import useBreakpoint from "~/hooks/useBreakpoint";
 import { Breakpoint } from "~/constants/global";
 
-export const StandardLayout = ({ children }: { children: JSX.Element }) => {
+export const StandardLayout = (props: PropsWithChildren<{}>) => {
+  const { children } = props;
   const breakpoint = useBreakpoint();
 
   return (

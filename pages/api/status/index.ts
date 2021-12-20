@@ -51,5 +51,6 @@ export default async function handler(
     };
   });
 
+  // @ts-ignore
   res.status(200).json(response);
 }
